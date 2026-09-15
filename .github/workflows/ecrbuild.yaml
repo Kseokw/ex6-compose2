@@ -51,7 +51,7 @@ jobs:
       # ./nginx의 경로는 현재 깃허브저장소 안에서 찾는것
       run: |
         docker build --no-cache -t 925047940866.dkr.ecr.ap-southeast-1.amazonaws.com/std07/nginx2:latest ./build/nginx
-        docker build --no-cache -t 925047940866.dkr.ecr.ap-southeast-1.amazonaws.com/std07/fastapi ./build/app
+        docker build --no-cache -t 925047940866.dkr.ecr.ap-southeast-1.amazonaws.com/std07/fastapi ./build/fastapi
 
         docker push 925047940866.dkr.ecr.ap-southeast-1.amazonaws.com/std07/nginx2:latest
         docker push 925047940866.dkr.ecr.ap-southeast-1.amazonaws.com/std07/fastapi:latest
