@@ -1,22 +1,19 @@
 services:
   service-fastapi:
-    image: 925047940866.dkr.ecr.ap-southeast-1.amazonaws.com/std07/fastapi
-    build:
-      context: ../build/fastapi # FastAPI Dockerfile이 있는 현재 경로
-      dockerfile: Dockerfile
+    image: 925047940866.dkr.ecr.ap-southeast-1.amazonaws.com/std07/fastapi:latest
     container_name: my-app
     restart: unless-stopped
     environment:
-      # 코드 내 DB_INFO["host"]를 'my-service-db'로 설정해야 합니다.
-      DB_HOST: "my-db"
+      DB_HOST: "my-db" # (추후 DB 컨테이너 이름과 일치해야 함)
       DB_USER: "std07"
       DB_PASSWORD: "1234"
       DB_NAME: "testdb"
     ports:
       - "8000:8000"
     networks:
-      - backend-net
+      - shared-backend
 
 networks:
-  backend-net:
-    driver: bridge
+  shared-backend:
+    external: true # 🌟 Nginx가 먼저 만든 네트워크에 숟가락만 얹음
+    name: shared-backend-net # 위 Nginx 네트워크 이름과 완벽히 일치시킴
