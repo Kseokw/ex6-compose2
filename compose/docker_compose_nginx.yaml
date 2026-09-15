@@ -1,6 +1,6 @@
 services:
   my-web:
-    image: seok9/mynginx:v1
+    image: 925047940866.dkr.ecr.ap-southeast-1.amazonaws.com/std07/nginx2
     pull_policy: if_not_present
     build:
       context: ../build/nginx     # Dockerfile(소스들)의 경로

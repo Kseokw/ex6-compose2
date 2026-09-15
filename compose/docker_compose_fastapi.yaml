@@ -1,6 +1,6 @@
 services:
   service-fastapi:
-    image: seok9/myfastapi:v4
+    image: 925047940866.dkr.ecr.ap-southeast-1.amazonaws.com/std07/fastapi
     build:
       context: ../build/fastapi # FastAPI Dockerfile이 있는 현재 경로
       dockerfile: Dockerfile
