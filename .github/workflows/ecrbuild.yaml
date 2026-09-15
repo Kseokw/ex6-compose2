@@ -35,6 +35,9 @@ jobs:
       run: |
        aws s3 cp ./compose/docker_compose_nginx.yaml s3://std07-git-web-s3/web-compose/docker_compose_nginx.yaml
        aws s3 cp ./compose/docker_compose_fastapi.yaml s3://std07-git-web-s3/web-compose/docker_compose_fastapi.yaml
+
+       aws s3 sync ./build/nginx/html s3://std07-git-web-s3/nginx/html
+       aws s3 cp ./build/nginx/default.conf s3://std07-git-web-s3/nginx/default.conf
   
     # ECR에 DOCKER 이미지 빌드 및 푸시
     - name: Login to Amazon ECR
@@ -65,14 +68,15 @@ jobs:
         --parameters "commands=[
           \"mkdir -p /home/ec2-user/nginx\",
           \"mkdir -p /home/ec2-user/fastapi\",
+          \"chown -R ec2-user:ec2-user /home/ec2-user/nginx\",
+          \"chown -R ec2-user:ec2-user /home/ec2-user/fastapi\",
           \"aws ecr get-login-password --region ap-southeast-1 | docker login --username AWS --password-stdin 925047940866.dkr.ecr.ap-southeast-1.amazonaws.com\",
           \"cd /home/ec2-user/nginx\",
           \"aws s3 cp s3://std07-git-web-s3/web-compose/docker_compose_nginx .\",
-          \"cd /home/ec2-user/nginx\",
           \"docker compose -f docker_compose_nginx pull\",
           \"docker compose -f docker_compose_nginx up -d --remove-orphans\",
           \"cd /home/ec2-user/fastapi\",
-          \"aws s3 sync s3://std07-git-web-s3/web-compose/docker_compose_fastapi .\",
+          \"aws s3  s3://std07-git-web-s3/web-compose/docker_compose_fastapi .\",
           \"docker compose -f docker_compose_fastapi pull\",
           \"docker compose -f docker_compose_fastapi up -d --remove-orphans\",
           \"docker image prune -f\"
