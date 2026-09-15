@@ -63,12 +63,18 @@ jobs:
         --document-name "AWS-RunShellScript" \
         --targets "Key=tag:Cicd,Values=asg" \
         --parameters "commands=[
-          \"mkdir -p /home/ec2-user/app\",
-          \"cd /home/ec2-user/app\",
+          \"mkdir -p /home/ec2-user/nginx\",
+          \"mkdir -p /home/ec2-user/fastapi\",
           \"aws ecr get-login-password --region ap-southeast-1 | docker login --username AWS --password-stdin 925047940866.dkr.ecr.ap-southeast-1.amazonaws.com\",
+          \"cd /home/ec2-user/nginx\",
+          \"aws s3 cp s3://std07-git-web-s3/web-compose/docker_compose_nginx .\",
+          \"cd /home/ec2-user/nginx\",
+          \"docker compose -f docker_compose_nginx pull\",
+          \"docker compose -f docker_compose_nginx up -d --remove-orphans\",
+          \"cd /home/ec2-user/fastapi\",
           \"aws s3 sync s3://std07-git-web-s3/web-compose .\",
-          \"docker compose pull\",
-          \"docker compose up -d --remove-orphans\",
+          \"docker compose -f docker_compose_fastapi pull\",
+          \"docker compose -f docker_compose_fastapi up -d --remove-orphans\",
           \"docker image prune -f\"
         ]" \
         --region ${{secrets.AWS_REGION}} \
