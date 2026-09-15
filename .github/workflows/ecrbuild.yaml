@@ -33,8 +33,8 @@ jobs:
 
     - name: S3 정적웹사이트로 배포
       run: |
-       aws s3 cp ./docker_compose_nginx.yaml s3://std07-git-web-s3/web-compose/docker_compose_nginx.yaml
-       aws s3 cp ./docker_compose_fastapi.yaml s3://std07-git-web-s3/web-compose/docker_compose_fastapi.yaml
+       aws s3 cp ./compose/docker_compose_nginx.yaml s3://std07-git-web-s3/web-compose/docker_compose_nginx.yaml
+       aws s3 cp ./compose/docker_compose_fastapi.yaml s3://std07-git-web-s3/web-compose/docker_compose_fastapi.yaml
   
     # ECR에 DOCKER 이미지 빌드 및 푸시
     - name: Login to Amazon ECR
