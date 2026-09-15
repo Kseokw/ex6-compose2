@@ -63,13 +63,13 @@ jobs:
         --document-name "AWS-RunShellScript" \
         --targets "Key=tag:Cicd,Values=asg" \
         --parameters "commands=[
-          "mkdir -p /home/ec2-user/app",
-          "cd /home/ec2-user/app",
-          "aws ecr get-login-password --region ap-southeast-1 | docker login --username AWS --password-stdin 925047940866.dkr.ecr.ap-southeast-1.amazonaws.com",
-          "aws s3 sync s3://std07-git-web-s3/web-compose .",
-          "docker compose pull",
-          "docker compose up -d --remove-orphans",
-          "docker image prune -f"
+          \"mkdir -p /home/ec2-user/app\",
+          \"cd /home/ec2-user/app\",
+          \"aws ecr get-login-password --region ap-southeast-1 | docker login --username AWS --password-stdin 925047940866.dkr.ecr.ap-southeast-1.amazonaws.com\",
+          \"aws s3 sync s3://std07-git-web-s3/web-compose .\",
+          \"docker compose pull\",
+          \"docker compose up -d --remove-orphans\",
+          \"docker image prune -f\"
         ]" \
         --region ${{secrets.AWS_REGION}} \
         --comment "Deploying SSM Docker"
