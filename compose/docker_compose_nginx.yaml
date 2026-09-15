@@ -1,0 +1,37 @@
+services:
+  my-web:
+    image: seok9/mynginx:v1
+    pull_policy: if_not_present
+    build:
+      context: ../build/nginx     # Dockerfile(소스들)의 경로
+      dockerfile: Dockerfile      # dockerfile 이름
+    container_name: my-nginx
+    restart: unless-stopped               # 컨테이너가 정지 하였을 경우: always | unless-stopped
+    ports:
+      - "80:80"
+    networks:
+      frontend-net:
+          ipv4_address: 192.168.0.10 # IP를 정의
+      backend-net:
+    volumes:
+      - shared-data:/var/log/nginx
+
+networks:
+  frontend-net:
+    driver: bridge
+    ipam: # 네트워크 상세 설정
+      config:
+        - subnet: 192.168.0.0/24
+          ip_range: 192.168.0.0/24
+          gateway: 192.168.0.1
+  backend-net:
+    driver: bridge
+
+# 볼륨 생성 =======================================================
+volumes:
+  shared-data:
+    driver: local # local | efs
+    driver_opts:
+      type: "none"  #  단순히 호스트의 경로를 연결
+      o: "bind"     #  호스트의 디렉토리를 컨테이너 내부와 직접 연결(Bind)하라는 표준 리눅스 마운트 옵션
+      device: "/home/std07/logs/nginx"

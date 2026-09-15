@@ -1,0 +1,61 @@
+# services:
+#   my-web:
+#     image: seok9/mynginx:v1
+#     pull_policy: if_not_present
+#     build:
+#       context: ../build/nginx     # Dockerfile(소스들)의 경로
+#       dockerfile: Dockerfile      # dockerfile 이름
+#     container_name: my-nginx
+#     restart: unless-stopped               # 컨테이너가 정지 하였을 경우: always | unless-stopped
+#     depends_on: # 같은 파일 내에 정의된 특정 앱(서비스)이 먼저 실행된 후 앱 실행
+#       - my-backend    # 먼저 실행되어야할 서비스명
+#     ports:
+#       - "80:80"
+#     networks:
+#       frontend-net:
+#           ipv4_address: 192.168.0.10 # IP를 정의
+#       backend-net:
+#     volumes:
+#       - shared-data:/var/log/nginx
+#   # ------------------------------------------------------------
+#   my-backend:
+#     image: seok9/myfastapi:v1
+#     build:
+#       context: ../build/fastapi # FastAPI Dockerfile이 있는 현재 경로
+#       dockerfile: Dockerfile
+#     container_name: my-app
+#     restart: unless-stopped
+#     environment:
+#       # 코드 내 DB_INFO["host"]를 'my-service-db'로 설정해야 합니다.
+#       DB_HOST: "my-db"
+#       DB_USER: "std07"
+#       DB_PASSWORD: "1234"
+#       DB_NAME: "testdb"
+#     ports:
+#       - "8000:8000"
+#     networks:
+#       - backend-net
+# # 네트워크 생성 ===================================================
+# networks:
+#   frontend-net:
+#     driver: bridge
+#     ipam: # 네트워크 상세 설정
+#       config:
+#         - subnet: 192.168.0.0/24
+#           ip_range: 192.168.0.0/24
+#           gateway: 192.168.0.1
+#   backend-net:
+#     driver: bridge
+#     ipam: # 네트워크 상세 설정
+#       config:
+#         - subnet: 192.168.1.0/24
+#           ip_range: 192.168.1.0/24
+#           gateway: 192.168.1.1
+# # 볼륨 생성 =======================================================
+# volumes:
+#   shared-data:
+#     driver: local # local | efs
+#     driver_opts:
+#       type: "none"  #  단순히 호스트의 경로를 연결
+#       o: "bind"     #  호스트의 디렉토리를 컨테이너 내부와 직접 연결(Bind)하라는 표준 리눅스 마운트 옵션
+#       device: "/home/std07/logs/nginx"

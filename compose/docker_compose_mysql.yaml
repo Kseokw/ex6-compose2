@@ -1,0 +1,21 @@
+# services:
+#     my-db:
+#         image: seok9/mysql:v1
+#         build:
+#             context: ../build/mysql/
+#             dockerfile: Dockerfile
+#         container_name: my-db
+#         ports:
+#             - "3306:3306"
+#         volumes:
+#             - db-data:/var/lib/mysql
+#         environment:
+#             MYSQL_ROOT_PASSWORD: "1234"
+# # 볼륨 생성
+# volumes:
+#     db-data:
+#         driver: local # local | efs | s3 등등
+#         driver_opts:
+#             type: "none" # 단순히 호스트의 경로를 연결
+#             o: "bind" # 호스트의 디렉토리를 컨테이너 내부와 직접 연결하라는 표준 리눅스 마운트 옵션
+#             device: "/home/ubuntu/data/mysql"
