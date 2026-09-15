@@ -65,25 +65,24 @@ jobs:
        aws ssm send-command \
         --document-name "AWS-RunShellScript" \
         --targets "Key=tag:Cicd,Values=asg" \
-        --parameters "commands=[
-          \"mkdir -p /home/ec2-user/nginx\",
-          \"mkdir -p /home/ec2-user/fastapi\",
-          \"chown -R ec2-user:ec2-user /home/ec2-user/nginx\",
-          \"chown -R ec2-user:ec2-user /home/ec2-user/fastapi\",
-          \"aws ecr get-login-password --region ap-southeast-1 | docker login --username AWS --password-stdin 925047940866.dkr.ecr.ap-southeast-1.amazonaws.com\",
-          \"cd /home/ec2-user/nginx\",
-          \"aws s3 cp s3://std07-git-web-s3/web-compose/docker_compose_nginx.yaml .\",
-          \"aws s3 sync s3://std07-git-web-s3/web-compose/nginx .\",
-          \"docker compose -f docker_compose_nginx pull\",
-          \"docker compose -f docker_compose_nginx up -d --remove-orphans\",
-          \"cd /home/ec2-user/fastapi\",
-          \"aws s3  s3://std07-git-web-s3/web-compose/docker_compose_fastapi.yaml .\",
-          \"docker compose -f docker_compose_fastapi pull\",
-          \"docker compose -f docker_compose_fastapi up -d --remove-orphans\",
-          \"docker image prune -f\"
-        ]" \
-        --region ${{secrets.AWS_REGION}} \
-        --comment "Deploying SSM Docker"
+        --parameters 'commands=[
+          "mkdir -p /home/ec2-user/nginx/html",
+          "mkdir -p /home/ec2-user/fastapi",
+          "chown -R ec2-user:ec2-user /home/ec2-user/nginx",
+          "chown -R ec2-user:ec2-user /home/ec2-user/fastapi",
+          "aws ecr get-login-password --region ap-southeast-1 | docker login --username AWS --password-stdin 925047940866.dkr.ecr.ap-southeast-1.amazonaws.com",
+          "cd /home/ec2-user/nginx",
+          "aws s3 cp s3://std07-git-web-s3/web-compose/docker_compose_nginx.yaml .",
+          "aws s3 sync s3://std07-git-web-s3/nginx/html ./html",
+          "aws s3 cp s3://std07-git-web-s3/nginx/default.conf .",
+          "docker compose -f docker_compose_nginx.yaml pull",
+          "docker compose -f docker_compose_nginx.yaml up -d --remove-orphans",
+          "cd /home/ec2-user/fastapi",
+          "aws s3 cp s3://std07-git-web-s3/web-compose/docker_compose_fastapi.yaml .",
+          "docker compose -f docker_compose_fastapi.yaml pull",
+          "docker compose -f docker_compose_fastapi.yaml up -d --remove-orphans",
+          "docker image prune -f"
+        ]' \
       
 
     # \"docker compose up -d --remove-orphans\" 현재 compose 안에 정의된 모든 서비스를 실행하고 파일과 일치하지 않는 서비스는 삭제
