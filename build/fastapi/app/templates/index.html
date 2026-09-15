@@ -1,0 +1,314 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{ data.title }}</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Noto Sans KR", sans-serif;
+        scroll-behavior: smooth;
+        background-color: #f0f7ff;
+      }
+
+      /* Hero Section - Docker Blue */
+      .hero-section {
+        height: 100vh;
+        background: linear-gradient(135deg, #2496ed 0%, #0d326b 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+      }
+
+      /* 4개 카테고리 박스 (Jinja2 Loop 적용 대상) */
+      .category-box {
+        background: rgba(255, 255, 255, 0.12);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        border-radius: 20px;
+        padding: 25px;
+        text-align: center;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        text-decoration: none;
+        color: white;
+        height: 220px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      }
+
+      /* 상하 흔들림 애니메이션 (1초) */
+      @keyframes verticalShake {
+        0% { transform: translateY(0); }
+        25% { transform: translateY(-7px); }
+        50% { transform: translateY(7px); }
+        75% { transform: translateY(-3px); }
+        100% { transform: translateY(0); }
+      }
+
+      .category-box:hover {
+        animation: verticalShake 1s ease-in-out;
+        background: rgba(255, 255, 255, 0.25);
+        border-color: #63b3ed;
+        color: #ffffff;
+      }
+
+      .content-section {
+        padding: 120px 0;
+        min-height: 85vh;
+      }
+      .section-title {
+        font-weight: 700;
+        color: #2496ed;
+        border-left: 6px solid #2496ed;
+        padding-left: 20px;
+        margin-bottom: 50px;
+      }
+      .bg-ocean {
+        background-color: #e9f2ff;
+      }
+      .card {
+        border: none;
+        border-top: 4px solid #2496ed;
+      }
+      code {
+        color: #2496ed;
+        font-weight: bold;
+      }
+      
+      /* 테스트 박스 스타일 */
+      .db-box {
+        border: 2px dashed #198754;
+        background-color: #f8fff9;
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+      .db-box:hover {
+        background-color: #e8f5e9;
+      }
+      .swarm-box {
+        border: 2px dashed #2496ed;
+        background-color: #f8fbff;
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+      .swarm-box:hover {
+        background-color: #e3f2fd;
+      }
+    </style>
+  </head>
+  <body>
+    <section class="hero-section text-center">
+      <div class="container">
+        <!-- DB에서 불러온 타이틀 데이터 렌더링 -->
+        <div class="mb-5">
+          <h1 class="display-3 fw-bold">{{ data.title }}</h1>
+          <p class="lead opacity-75">{{ data.subtitle }}</p>
+        </div>
+
+        <div class="row g-4">
+          <!-- DB 데이터 기반 반복문 렌더링 -->
+          {% for item in data.sections %}
+          <div class="col-md-3">
+            <a href="#{{ item.id }}" class="category-box">
+              <h4 class="fw-bold">{{ item.title }}</h4>
+              <p class="small mb-0 opacity-75">{{ item.desc }}</p>
+            </a>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+
+    <section id="arch" class="content-section">
+      <div class="container">
+        <h2 class="section-title">01. Docker Architecture</h2>
+        <p>
+          도커는 클라이언트-서버 아키텍처를 사용합니다. 
+          <strong>Docker Client</strong>가 <strong>Docker Daemon</strong>과 통신하여 컨테이너를 빌드, 실행, 배포하는 구조를 가집니다.
+        </p>
+        <div class="row g-4 mt-3">
+          <div class="col-md-6">
+            <div class="card shadow-sm h-100 p-3">
+              <h5>Docker Daemon (dockerd)</h5>
+              <ul class="text-muted">
+                <li>컨테이너, 이미지, 네트워크, 볼륨 관리</li>
+                <li>API 요청 수신 및 처리</li>
+                <li>다른 데몬과 통신하여 서비스 관리</li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="card shadow-sm h-100 p-3">
+              <h5>Docker Client & Registry</h5>
+              <ul class="text-muted">
+                <li><strong>CLI:</strong> 사용자가 도커와 상호작용하는 명령어 인터페이스</li>
+                <li><strong>Docker Hub:</strong> 도커 이미지를 보관하고 배포하는 공개/비공개 저장소</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="object" class="content-section bg-ocean">
+      <div class="container text-center">
+        <h2 class="section-title text-start">02. Docker Components & Tests</h2>
+        <div class="row g-4">
+          <div class="col-md-3">
+            <div class="p-4 bg-white rounded-4 shadow-sm h-100">
+              <h5 class="fw-bold">Image</h5>
+              <p class="small text-muted">컨테이너 생성을 위한 읽기 전용 템플릿</p>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="p-4 bg-white rounded-4 shadow-sm h-100">
+              <h5 class="fw-bold">Container</h5>
+              <p class="small text-muted">이미지가 메모리에 로드되어 실행 중인 인스턴스</p>
+            </div>
+          </div>
+          
+          <!-- DB 연결 테스트 박스 -->
+          <div class="col-md-3">
+            <div class="p-4 rounded-4 shadow-sm h-100 db-box" onclick="runTest('db')">
+              <h5 class="fw-bold text-success">DB Connection Test</h5>
+              <p class="small text-muted mb-0">클릭하여 별도의 MySQL 컨테이너와의 연결 상태를 테스트합니다.</p>
+            </div>
+          </div>
+
+          <!-- 도커 스웜 테스트용 박스 -->
+          <div class="col-md-3">
+            <div class="p-4 rounded-4 shadow-sm h-100 swarm-box" onclick="runTest('swarm')">
+              <h5 class="fw-bold text-primary">Docker Swarm Test</h5>
+              <p class="small text-muted mb-0">Multi-host 오케스트레이션 및 로드 밸런싱 동작을 테스트합니다.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="network" class="content-section">
+      <div class="container">
+        <h2 class="section-title">03. Multi-Compose Network</h2>
+        <p class="mb-4">프론트/백엔드 서비스(<code>docker_compose_front.yaml</code>)와 DB 서비스(<code>docker_compose_mysql.yaml</code>)를 공통 네트워크로 연결하는 예시입니다.</p>
+        <div class="bg-dark text-info p-4 rounded-4 shadow">
+          <pre class="mb-0"><code class="text-info bg-transparent"># docker_compose_front.yaml
+services:
+  fastapi-app:
+    build: ../build/fastapi
+    environment:
+      # 컨테이너 이름(mysql_db)으로 통신
+      - DATABASE_URL=mysql+pymysql://user:password@mysql_db:3306/mydb
+    networks:
+      - shared_network
+
+networks:
+  shared_network:
+    external: true</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <footer class="py-5 text-center bg-dark text-white-50">
+      <p>&copy; 2026 Ian's Docker Guide | Built with FastAPI & Jinja2</p>
+    </footer>
+
+    <!-- 테스트 결과 모달 (팝업창) -->
+    <div class="modal fade" id="testResultModal" tabindex="-1" aria-labelledby="testResultModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg">
+          <div class="modal-header text-white bg-primary">
+            <h5 class="modal-title fw-bold" id="testResultModalLabel">테스트 결과</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body p-4" id="testResultBody">
+            <div class="d-flex justify-content-center">
+              <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer border-0">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+      // 테스트 실행 자바스크립트 함수
+      async function runTest(type) {
+        // 1. 모달창 띄우기 및 로딩 스피너 표시
+        const resultModal = new bootstrap.Modal(document.getElementById('testResultModal'));
+        const resultBody = document.getElementById('testResultBody');
+        const modalHeader = document.querySelector('#testResultModal .modal-header');
+        
+        // 타입에 따른 제목 및 API 엔드포인트 설정
+        let apiUrl = '';
+        if(type === 'db') {
+          document.getElementById('testResultModalLabel').innerText = 'MySQL DB 연결 테스트';
+          modalHeader.className = 'modal-header text-white bg-success';
+          apiUrl = '/api/test/db'; // 추후 FastAPI에 만들 엔드포인트
+        } else if(type === 'swarm') {
+          document.getElementById('testResultModalLabel').innerText = 'Docker Swarm 상태 테스트';
+          modalHeader.className = 'modal-header text-white bg-primary';
+          apiUrl = '/api/test/swarm'; // 추후 FastAPI에 만들 엔드포인트
+        }
+
+        resultBody.innerHTML = `
+          <div class="text-center my-3">
+            <div class="spinner-border text-secondary mb-3" role="status"></div>
+            <p class="mb-0 fw-bold">백엔드로 요청을 보내는 중입니다...</p>
+            <small class="text-muted">API: ${apiUrl}</small>
+          </div>
+        `;
+        resultModal.show();
+
+        try {
+          // 2. FastAPI 백엔드로 데이터 요청
+          const response = await fetch(apiUrl);
+          
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          
+          const data = await response.json();
+          
+          // 3. 백엔드에서 받은 결과(JSON)를 화면에 표시
+          // data.status, data.message 형식으로 응답이 온다고 가정
+          resultBody.innerHTML = `
+            <div class="alert alert-success border-0 shadow-sm">
+              <h5 class="alert-heading fw-bold">✅ 테스트 성공</h5>
+              <hr>
+              <p class="mb-0">${data.message || JSON.stringify(data)}</p>
+            </div>
+          `;
+        } catch (error) {
+          // 통신 실패 또는 에러 발생 시 처리
+          resultBody.innerHTML = `
+            <div class="alert alert-danger border-0 shadow-sm">
+              <h5 class="alert-heading fw-bold">❌ 테스트 실패</h5>
+              <hr>
+              <p class="mb-2">백엔드 API 호출에 실패했습니다.</p>
+              <code class="text-danger small">${error.message}</code>
+              <p class="small text-muted mt-3 mb-0">FastAPI 서버(main.py)에 해당 라우터(${apiUrl})가 생성되어 있는지 확인해주세요.</p>
+            </div>
+          `;
+        }
+      }
+    </script>
+  </body>
+</html>

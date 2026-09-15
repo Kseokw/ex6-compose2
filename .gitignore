@@ -23,7 +23,7 @@ Thumbs.db           # Windows 전용 썸네일 파일
 .idea/              # PyCharm 설정 파일
 
 # === 5. 빌드 및 배포 결과물 ===
-build/
+# build/
 dist/
 *.egg-info/
 
